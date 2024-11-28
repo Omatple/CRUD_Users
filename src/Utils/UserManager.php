@@ -2,14 +2,15 @@
 
 namespace App\Utils;
 
-use App\Database\User;
+use App\Database\UserEntity;
 
 require __DIR__ . "/../../vendor/autoload.php";
+
 class UserManager
 {
-    public static function deleteUserRecursive(int $id, string $image): void
+    public static function removeUserAndImage(int $userId, string $imagePath): void
     {
-        User::deleteUser($id);
-        ImageProcessor::deleteLastImage($image);
+        UserEntity::removeUser($userId);
+        ImageHandler::deleteImage($imagePath);
     }
 }

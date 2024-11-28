@@ -5,55 +5,56 @@ namespace App\Database;
 use \Faker\Factory;
 
 require __DIR__ . "/../../vendor/autoload.php";
-class State extends QueryExecutor
+
+class StateEntity extends DatabaseQueryHandler
 {
     private int $id;
     private string $name;
     private string $color;
 
-    public static function readStates(): array
+    public static function fetchStates(): array
     {
-        return parent::read("states");
+        return parent::fetchRecords("states");
     }
 
-    public function createState(): void
+    public function addState(): void
     {
-        parent::create("states", [
-            ":n" => $this->name,
-            ":c" => $this->color,
+        parent::insertRecord("states", [
+            ":name" => $this->name,
+            ":color" => $this->color,
         ], "name", "color");
     }
 
-    public function deleteState(int $id): void
+    public function removeState(int $id): void
     {
-        parent::delete($id, "states");
+        parent::removeRecord($id, "states");
     }
 
     public static function generateFakeStates(): void
     {
-        $amount = 20;
+        $count = 20;
         $faker = Factory::create("es_ES");
-        for ($i = 0; $i < $amount; $i++) {
-            (new State)
+        for ($i = 0; $i < $count; $i++) {
+            (new StateEntity)
                 ->setName($faker->unique()->state())
                 ->setColor($faker->unique()->colorName())
-                ->createState();
+                ->addState();
         }
     }
 
-    public static function getStatesId(): array
+    public static function fetchStateIds(): array
     {
         $ids = [];
-        $result = parent::executeQuery("SELECT id FROM states", "Failed retraiving IDs of states");
+        $result = parent::runQuery("SELECT id FROM states", "Failed to retrieve IDs of states");
         while ($row = $result->fetchColumn()) {
             $ids[] = $row;
         }
         return $ids;
     }
 
-    public static function deleteAllStates(): void
+    public static function clearAllStates(): void
     {
-        parent::deleteAll("states");
+        parent::clearTable("states");
     }
 
     /**

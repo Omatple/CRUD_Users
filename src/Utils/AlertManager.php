@@ -2,12 +2,12 @@
 
 namespace App\Utils;
 
-class SessionAlert
+class AlertManager
 {
-    public static function displayAlert()
+    public static function showAlert(): void
     {
         if ($message = $_SESSION["message"] ?? false) {
-            echo <<< HTML
+            echo <<<HTML
                 <script>
                     Swal.fire({
                       position: "center",
@@ -16,7 +16,7 @@ class SessionAlert
                       showConfirmButton: false,
                       timer: 2000
                     }); 
-                </script>               
+                </script>
             HTML;
             unset($_SESSION["message"]);
         }
